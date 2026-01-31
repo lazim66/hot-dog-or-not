@@ -188,9 +188,7 @@ export default function Page() {
           {result ? (
             <AnalysisResult 
               result={result} 
-              imageUrl={selectedImage || undefined} 
-              onAnalyzeAnother={reset}
-              showAnalyzeAnother={true}
+              imageUrl={selectedImage || undefined}
             />
           ) : analyzing ? (
             <div className="space-y-6">
@@ -257,6 +255,22 @@ export default function Page() {
 
         </div>
       </main>
+
+      {/* Fixed Bottom Action Button - Show only when result is displayed */}
+      {result && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
+          <Button
+            onClick={reset}
+            size="lg"
+            variant="default"
+            className="gap-2 shadow-lg hover:shadow-xl transition-shadow"
+          >
+            <ArrowCounterClockwise className="w-4 h-4" weight="duotone" />
+            Analyze Another
+            <Kbd>Esc</Kbd>
+          </Button>
+        </div>
+      )}
 
       {/* Shortcuts Dialog */}
       <Dialog open={showShortcuts} onOpenChange={setShowShortcuts}>

@@ -91,9 +91,7 @@ export default function HistoryPage() {
       <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-2xl px-4">
         <div className="bg-background/80 backdrop-blur-xl border rounded-full shadow-lg px-6 py-3">
           <div className="flex items-center justify-between">
-            <Link href="/" className="hover:opacity-80 transition-opacity">
-              <h1 className="text-xl font-bold tracking-tight">Analysis History</h1>
-            </Link>
+            <h1 className="text-xl font-bold tracking-tight">Analysis History</h1>
             
             <Button variant="ghost" size="sm" asChild>
               <Link href="/">

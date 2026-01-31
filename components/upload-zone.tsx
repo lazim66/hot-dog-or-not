@@ -84,10 +84,15 @@ export function UploadZone({ onImageSelect, disabled = false }: UploadZoneProps)
             variant="default"
             onClick={handleFileClick}
             disabled={disabled}
+            className="gap-2"
           >
             {/* eslint-disable-next-line jsx-a11y/alt-text */}
-            <Image className="w-4 h-4 mr-2" weight="duotone" />
+            <Image className="w-4 h-4" weight="duotone" />
             Choose File
+            <div className="flex items-center gap-0.5 ml-1">
+              <Kbd className="text-[10px]">{typeof navigator !== 'undefined' && navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}</Kbd>
+              <Kbd className="text-[10px]">O</Kbd>
+            </div>
           </Button>
 
           <Button

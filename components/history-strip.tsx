@@ -59,7 +59,7 @@ export function HistoryStrip({ onAnalysisClick, limit = 10 }: HistoryStripProps)
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold flex items-center gap-2">
             <ClockCounterClockwise className="w-5 h-5" weight="duotone" />
-            Recent Analyses
+            Recent Scans
           </h3>
         </div>
         <div className="flex gap-4 overflow-hidden">
@@ -87,7 +87,7 @@ export function HistoryStrip({ onAnalysisClick, limit = 10 }: HistoryStripProps)
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold flex items-center gap-2">
           <ClockCounterClockwise className="w-5 h-5" weight="duotone" />
-          Recent Analyses
+          Recent Scans
         </h3>
         <Button variant="ghost" size="sm" asChild>
           <Link href="/history">

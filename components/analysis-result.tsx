@@ -6,20 +6,16 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
-import { Button } from '@/components/ui/button';
-import { Kbd } from '@/components/ui/kbd';
-import { CheckCircle, XCircle, ArrowCounterClockwise } from '@phosphor-icons/react';
+import { CheckCircle, XCircle } from '@phosphor-icons/react';
 import { AnalyzeResponse } from '@/types';
 import { cn } from '@/lib/utils';
 
 interface AnalysisResultProps {
   result: AnalyzeResponse;
   imageUrl?: string;
-  onAnalyzeAnother?: () => void;
-  showAnalyzeAnother?: boolean;
 }
 
-export function AnalysisResult({ result, imageUrl, onAnalyzeAnother, showAnalyzeAnother = false }: AnalysisResultProps) {
+export function AnalysisResult({ result, imageUrl }: AnalysisResultProps) {
   useEffect(() => {
     // Trigger confetti for hot dog detections
     if (result.isHotDog) {
@@ -141,25 +137,6 @@ export function AnalysisResult({ result, imageUrl, onAnalyzeAnother, showAnalyze
                     </div>
                   </div>
                 )}
-              </div>
-            </>
-          )}
-
-          {/* Analyze Another Button */}
-          {showAnalyzeAnother && onAnalyzeAnother && (
-            <>
-              <Separator />
-              <div className="flex justify-center pt-2">
-                <Button
-                  onClick={onAnalyzeAnother}
-                  variant="outline"
-                  size="lg"
-                  className="gap-2"
-                >
-                  <ArrowCounterClockwise className="w-4 h-4" weight="duotone" />
-                  Analyze Another
-                  <Kbd>Esc</Kbd>
-                </Button>
               </div>
             </>
           )}
