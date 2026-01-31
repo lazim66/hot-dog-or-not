@@ -4,6 +4,7 @@ import { useCallback, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Kbd } from '@/components/ui/kbd';
 import { UploadSimple, Camera, Image } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 
@@ -100,9 +101,15 @@ export function UploadZone({ onImageSelect, disabled = false }: UploadZoneProps)
           </Button>
         </div>
 
-        <p className="text-xs text-muted-foreground">
-          Supports: PNG, JPG, WEBP, GIF
-        </p>
+        <div className="flex items-center gap-4 text-xs text-muted-foreground">
+          <span>Supports: PNG, JPG, WEBP, GIF</span>
+          <span className="text-muted-foreground/50">|</span>
+          <div className="flex items-center gap-1.5">
+            <span>Paste:</span>
+            <Kbd className="text-[10px]">{typeof navigator !== 'undefined' && navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}</Kbd>
+            <Kbd className="text-[10px]">V</Kbd>
+          </div>
+        </div>
 
         {/* Hidden inputs */}
         <input {...getInputProps()} />

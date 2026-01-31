@@ -7,16 +7,20 @@ import { SampleImages } from '@/components/sample-images';
 import { HistoryStrip } from '@/components/history-strip';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Kbd } from '@/components/ui/kbd';
 import { getSessionId } from '@/lib/utils';
 import { AnalyzeResponse } from '@/types';
 import { toast } from 'sonner';
-import { ArrowCounterClockwise, Keyboard } from '@phosphor-icons/react';
+import { ArrowCounterClockwise } from '@phosphor-icons/react';
+import Link from 'next/link';
 
 export default function Page() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [result, setResult] = useState<AnalyzeResponse | null>(null);
   const [showShortcuts, setShowShortcuts] = useState(false);
+  const [selectedHistoryItem, setSelectedHistoryItem] = useState<AnalyzeResponse | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Convert File to base64
@@ -157,31 +161,28 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      {/* Header */}
-      <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4 py-6">
+      {/* Floating Header */}
+      <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-2xl px-4">
+        <div className="bg-background/80 backdrop-blur-xl border rounded-full shadow-lg px-6 py-3">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold">Hot Dog or Not</h1>
-              <p className="text-sm text-muted-foreground mt-1">
-                Enterprise Edition - Powered by AI
-              </p>
-            </div>
+            <Link href="/" className="hover:opacity-80 transition-opacity">
+              <h1 className="text-xl font-bold tracking-tight">Hot Dog or Not</h1>
+            </Link>
             
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowShortcuts(!showShortcuts)}
+            <button
+              onClick={() => setShowShortcuts(true)}
+              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              <Keyboard className="w-4 h-4 mr-2" weight="duotone" />
-              Shortcuts
-            </Button>
+              <span className="hidden sm:inline">Press</span>
+              <Kbd>?</Kbd>
+              <span className="hidden sm:inline">for shortcuts</span>
+            </button>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 py-24">
         <div className="max-w-4xl mx-auto space-y-8">
           {/* Result or Upload Zone */}
           {result ? (
@@ -230,53 +231,61 @@ export default function Page() {
           {!analyzing && (
             <HistoryStrip
               onAnalysisClick={(analysis) => {
-                setResult(analysis);
-                setSelectedImage(analysis.imageUrl);
+                setSelectedHistoryItem(analysis);
               }}
               limit={10}
             />
           )}
 
-          {/* Keyboard Shortcuts */}
-          {showShortcuts && (
-            <div className="mt-8 p-6 border rounded-lg bg-card">
-              <h3 className="font-semibold mb-4">Keyboard Shortcuts</h3>
-              <div className="grid gap-3 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Open file picker</span>
-                  <kbd className="px-2 py-1 bg-muted rounded text-xs font-mono">
-                    {navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'} + O
-                  </kbd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Paste from clipboard</span>
-                  <kbd className="px-2 py-1 bg-muted rounded text-xs font-mono">
-                    {navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'} + V
-                  </kbd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Reset/Clear</span>
-                  <kbd className="px-2 py-1 bg-muted rounded text-xs font-mono">Esc</kbd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Show shortcuts</span>
-                  <kbd className="px-2 py-1 bg-muted rounded text-xs font-mono">?</kbd>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t mt-20">
-        <div className="container mx-auto px-4 py-8 text-center text-sm text-muted-foreground">
-          <p>© 2026 Hot Dog or Not - Enterprise Edition. All rights reserved.</p>
-          <p className="mt-2">
-            Powered by OpenAI GPT-4o Vision & Supabase
-          </p>
-        </div>
-      </footer>
+      {/* Shortcuts Dialog */}
+      <Dialog open={showShortcuts} onOpenChange={setShowShortcuts}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Keyboard Shortcuts</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm">Open file picker</span>
+              <div className="flex gap-1">
+                <Kbd>{typeof navigator !== 'undefined' && navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}</Kbd>
+                <Kbd>O</Kbd>
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm">Paste from clipboard</span>
+              <div className="flex gap-1">
+                <Kbd>{typeof navigator !== 'undefined' && navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}</Kbd>
+                <Kbd>V</Kbd>
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm">Reset/Clear</span>
+              <Kbd>Esc</Kbd>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm">Show shortcuts</span>
+              <Kbd>?</Kbd>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* History Item Dialog */}
+      <Dialog open={selectedHistoryItem !== null} onOpenChange={(open) => !open && setSelectedHistoryItem(null)}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          {selectedHistoryItem && (
+            <div className="space-y-4">
+              <DialogHeader>
+                <DialogTitle>Analysis Details</DialogTitle>
+              </DialogHeader>
+              <AnalysisResult result={selectedHistoryItem} imageUrl={selectedHistoryItem.imageUrl} />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Hidden file input for keyboard shortcut */}
       <input

@@ -1,6 +1,13 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
 import { cn } from '@/lib/utils';
 
 interface SampleImagesProps {
@@ -8,26 +15,30 @@ interface SampleImagesProps {
   disabled?: boolean;
 }
 
-// Placeholder sample images - replace with actual hot dog images
 const SAMPLE_IMAGES = [
   {
-    url: '/samples/hot-dog-1.jpg',
+    url: '/samples/hot-dog-combi.jpg',
     label: 'Classic Hot Dog',
     isHotDog: true,
   },
   {
-    url: '/samples/hot-dog-2.jpg',
-    label: 'Chicago Style',
+    url: '/samples/hot-dog-creamy.jpg',
+    label: 'Creamy Hot Dog',
     isHotDog: true,
   },
   {
-    url: '/samples/not-hot-dog-1.jpg',
+    url: '/samples/burger.jpg',
+    label: 'Burger',
+    isHotDog: false,
+  },
+  {
+    url: '/samples/sandwich.jpg',
     label: 'Sandwich',
     isHotDog: false,
   },
   {
-    url: '/samples/not-hot-dog-2.jpg',
-    label: 'Burger',
+    url: '/samples/food-platter.jpeg',
+    label: 'Food Platter',
     isHotDog: false,
   },
 ];
@@ -41,43 +52,51 @@ export function SampleImages({ onSampleSelect, disabled = false }: SampleImagesP
         </h3>
       </div>
       
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {SAMPLE_IMAGES.map((sample, index) => (
-          <button
-            key={index}
-            onClick={() => !disabled && onSampleSelect(sample.url)}
-            disabled={disabled}
-            className={cn(
-              'group relative transition-all',
-              disabled && 'opacity-50 cursor-not-allowed'
-            )}
-          >
-            <Card className="overflow-hidden border-2 transition-all hover:border-primary hover:shadow-md">
-              <div className="aspect-square bg-muted relative flex items-center justify-center">
-                {/* Placeholder - will be replaced with actual images */}
-                <div className="text-center p-4">
-                  <div className="text-4xl mb-2">
-                    {sample.isHotDog ? '🌭' : '🍔'}
+      <Carousel
+        opts={{
+          align: "start",
+          loop: true,
+        }}
+        className="w-full"
+      >
+        <CarouselContent className="-ml-2 md:-ml-4">
+          {SAMPLE_IMAGES.map((sample, index) => (
+            <CarouselItem key={index} className="pl-2 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4">
+              <button
+                onClick={() => !disabled && onSampleSelect(sample.url)}
+                disabled={disabled}
+                className={cn(
+                  'group relative transition-all w-full',
+                  disabled && 'opacity-50 cursor-not-allowed'
+                )}
+              >
+                <Card className="overflow-hidden border-2 transition-all hover:border-primary hover:shadow-lg">
+                  <div className="aspect-square bg-muted relative">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={sample.url}
+                      alt={sample.label}
+                      className="w-full h-full object-cover"
+                    />
+                    
+                    {/* Overlay on hover */}
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
+                      <span className="text-white text-sm font-semibold">
+                        {sample.label}
+                      </span>
+                      <span className="text-white/80 text-xs">
+                        Click to analyze
+                      </span>
+                    </div>
                   </div>
-                  <p className="text-xs font-medium text-muted-foreground">
-                    {sample.label}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    (Add image)
-                  </p>
-                </div>
-                
-                {/* Overlay on hover */}
-                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">
-                    Analyze
-                  </span>
-                </div>
-              </div>
-            </Card>
-          </button>
-        ))}
-      </div>
+                </Card>
+              </button>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="left-0" />
+        <CarouselNext className="right-0" />
+      </Carousel>
     </div>
   );
 }
