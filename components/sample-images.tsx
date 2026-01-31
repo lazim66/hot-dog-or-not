@@ -94,8 +94,8 @@ export function SampleImages({ onSampleSelect, disabled = false }: SampleImagesP
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="left-0" />
-        <CarouselNext className="right-0" />
+        <CarouselPrevious className="-left-12" />
+        <CarouselNext className="-right-12" />
       </Carousel>
     </div>
   );

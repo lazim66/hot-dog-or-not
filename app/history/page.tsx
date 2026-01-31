@@ -87,32 +87,26 @@ export default function HistoryPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      {/* Header */}
-      <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center gap-4">
+      {/* Floating Header */}
+      <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-2xl px-4">
+        <div className="bg-background/80 backdrop-blur-xl border rounded-full shadow-lg px-6 py-3">
+          <div className="flex items-center justify-between">
+            <Link href="/" className="hover:opacity-80 transition-opacity">
+              <h1 className="text-xl font-bold tracking-tight">Analysis History</h1>
+            </Link>
+            
             <Button variant="ghost" size="sm" asChild>
               <Link href="/">
                 <ArrowLeft className="w-4 h-4 mr-2" weight="duotone" />
                 Back
               </Link>
             </Button>
-            
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold flex items-center gap-3">
-                <ClockCounterClockwise className="w-8 h-8" weight="duotone" />
-                Analysis History
-              </h1>
-              <p className="text-sm text-muted-foreground mt-1">
-                {total} {total === 1 ? 'analysis' : 'analyses'} total
-              </p>
-            </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 py-24">
         <div className="max-w-7xl mx-auto space-y-8">
           <Tabs defaultValue="history" className="w-full">
             <TabsList>

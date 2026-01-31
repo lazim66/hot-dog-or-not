@@ -20,8 +20,8 @@ export function StatsChart({ analyses }: StatsChartProps) {
   const avgConfidence = analyses.reduce((sum, a) => sum + a.confidence, 0) / analyses.length;
 
   const pieData = [
-    { name: 'Hot Dog', value: hotDogCount, fill: 'hsl(var(--chart-1))' },
-    { name: 'Not Hot Dog', value: notHotDogCount, fill: 'hsl(var(--chart-2))' },
+    { name: 'Hot Dog', value: hotDogCount, fill: 'hsl(142, 71%, 45%)' }, // Green
+    { name: 'Not Hot Dog', value: notHotDogCount, fill: 'hsl(0, 84%, 60%)' }, // Red
   ];
 
   const chartConfig = {

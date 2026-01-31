@@ -2,7 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { AnalysisCard } from '@/components/analysis-card';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AnalyzeResponse } from '@/types';
@@ -91,18 +97,26 @@ export function HistoryStrip({ onAnalysisClick, limit = 10 }: HistoryStripProps)
         </Button>
       </div>
 
-      <ScrollArea className="w-full whitespace-nowrap">
-        <div className="flex gap-4 pb-4">
+      <Carousel
+        opts={{
+          align: "start",
+          loop: false,
+        }}
+        className="w-full"
+      >
+        <CarouselContent className="-ml-2 md:-ml-4">
           {analyses.map((analysis) => (
-            <div key={analysis.id} className="flex-shrink-0 w-64">
+            <CarouselItem key={analysis.id} className="pl-2 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4">
               <AnalysisCard
                 analysis={analysis}
                 onClick={() => onAnalysisClick?.(analysis)}
               />
-            </div>
+            </CarouselItem>
           ))}
-        </div>
-      </ScrollArea>
+        </CarouselContent>
+        <CarouselPrevious className="-left-12" />
+        <CarouselNext className="-right-12" />
+      </Carousel>
     </div>
   );
 }

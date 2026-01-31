@@ -70,101 +70,88 @@ export function AnalysisResult({ result, imageUrl }: AnalysisResultProps) {
 
       {/* Verdict Card */}
       <Card>
-        <CardContent className="pt-12 pb-8">
-          <div className="text-center space-y-6">
+        <CardContent className="py-8">
+          <div className="text-center space-y-4">
             {/* Icon */}
             <div className="flex items-center justify-center">
               {result.isHotDog ? (
-                <div className="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center">
-                  <CheckCircle className="w-12 h-12 text-green-500" weight="duotone" />
+                <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center">
+                  <CheckCircle className="w-9 h-9 text-green-500" weight="duotone" />
                 </div>
               ) : (
-                <div className="w-20 h-20 rounded-full bg-red-500/10 flex items-center justify-center">
-                  <XCircle className="w-12 h-12 text-red-500" weight="duotone" />
+                <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center">
+                  <XCircle className="w-9 h-9 text-red-500" weight="duotone" />
                 </div>
               )}
             </div>
             
             {/* Verdict Text */}
-            <div>
-              <h2 className={cn(
-                'text-5xl font-bold tracking-tight',
-                result.isHotDog ? 'text-green-600' : 'text-red-600'
-              )}>
-                {result.isHotDog ? 'HOT DOG' : 'NOT HOT DOG'}
-              </h2>
-            </div>
+            <h2 className={cn(
+              'text-3xl font-bold tracking-tight',
+              result.isHotDog ? 'text-green-600' : 'text-red-600'
+            )}>
+              {result.isHotDog ? 'HOT DOG' : 'NOT HOT DOG'}
+            </h2>
           </div>
         </CardContent>
       </Card>
 
       {/* Details Card */}
       <Card>
-        <CardContent className="pt-6 space-y-6">
+        <CardContent className="pt-6 space-y-4">
           {/* Confidence */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">Confidence</span>
-              <span className="text-2xl font-bold">{result.confidence.toFixed(1)}%</span>
+              <span className="text-xl font-bold">{result.confidence.toFixed(1)}%</span>
             </div>
             <Progress value={result.confidence} className="h-2" />
           </div>
 
           <Separator />
 
-          {/* Category */}
+          {/* Reasoning with integrated classification */}
           <div className="space-y-2">
-            <h4 className="text-sm font-medium">Classification</h4>
-            <p className="text-sm text-muted-foreground">{getCategoryLabel(result.category)}</p>
-          </div>
-
-          <Separator />
-
-          {/* Reasoning */}
-          <div className="space-y-2">
-            <h4 className="text-sm font-medium">Analysis</h4>
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm font-medium">Analysis</h4>
+              <Badge variant="secondary" className="text-xs">{getCategoryLabel(result.category)}</Badge>
+            </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               {result.reasoning}
             </p>
           </div>
 
-          {/* Style - only show if not null */}
-          {result.style && (
+          {/* Additional Details - compact row */}
+          {(result.style || result.hotDogCount > 1 || result.detectedItems.length > 0) && (
             <>
               <Separator />
-              <div className="space-y-2">
-                <h4 className="text-sm font-medium">Style</h4>
-                <Badge variant="secondary">{result.style}</Badge>
-              </div>
-            </>
-          )}
-
-          {/* Hot Dog Count */}
-          {result.hotDogCount > 1 && (
-            <>
-              <Separator />
-              <div className="space-y-2">
-                <h4 className="text-sm font-medium">Count</h4>
-                <p className="text-sm text-muted-foreground">
-                  {result.hotDogCount} hot dogs detected
-                </p>
-              </div>
-            </>
-          )}
-
-          {/* Detected Items */}
-          {result.detectedItems.length > 0 && (
-            <>
-              <Separator />
-              <div className="space-y-2">
-                <h4 className="text-sm font-medium">Detected Items</h4>
-                <div className="flex flex-wrap gap-2">
-                  {result.detectedItems.map((item, index) => (
-                    <Badge key={index} variant="outline" className="text-xs">
-                      {item}
-                    </Badge>
-                  ))}
-                </div>
+              <div className="space-y-3">
+                {result.style && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="text-muted-foreground">Style:</span>
+                    <Badge variant="secondary" className="text-xs">{result.style}</Badge>
+                  </div>
+                )}
+                
+                {result.hotDogCount > 1 && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="text-muted-foreground">Count:</span>
+                    <span className="font-medium">{result.hotDogCount} detected</span>
+                  </div>
+                )}
+                
+                {result.detectedItems.length > 0 && (
+                  <div className="space-y-1.5">
+                    <span className="text-sm text-muted-foreground">Detected Items:</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {result.detectedItems.map((item, index) => (
+                        <Badge key={index} variant="outline" className="text-xs">
+                          {item}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </>
           )}

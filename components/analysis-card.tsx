@@ -29,7 +29,7 @@ export function AnalysisCard({ analysis, onClick }: AnalysisCardProps) {
       onClick={onClick}
     >
       {/* Image Thumbnail */}
-      <div className="relative aspect-video bg-muted">
+      <div className="relative aspect-square bg-muted">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={analysis.imageUrl}

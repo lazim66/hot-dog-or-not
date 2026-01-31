@@ -6,7 +6,7 @@ import { AnalysisResult } from '@/components/analysis-result';
 import { SampleImages } from '@/components/sample-images';
 import { HistoryStrip } from '@/components/history-strip';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Kbd } from '@/components/ui/kbd';
 import { getSessionId } from '@/lib/utils';
@@ -194,24 +194,51 @@ export default function Page() {
                   onClick={reset}
                   variant="outline"
                   size="lg"
+                  className="gap-2"
                 >
-                  <ArrowCounterClockwise className="w-4 h-4 mr-2" weight="duotone" />
+                  <ArrowCounterClockwise className="w-4 h-4" weight="duotone" />
                   Analyze Another
+                  <Kbd>Esc</Kbd>
                 </Button>
               </div>
             </div>
           ) : analyzing ? (
-            <div className="space-y-4">
-              <Skeleton className="w-full aspect-video rounded-lg" />
-              <div className="text-center space-y-2">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10">
-                  <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-                  <span className="text-sm font-medium">Analyzing image...</span>
+            <div className="space-y-6">
+              <Card className="overflow-hidden">
+                <div className="relative aspect-video bg-muted">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" 
+                       style={{
+                         backgroundSize: '200% 100%',
+                         animation: 'shimmer 2s infinite'
+                       }} 
+                  />
+                  {selectedImage && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={selectedImage}
+                      alt="Analyzing"
+                      className="w-full h-full object-contain opacity-50"
+                    />
+                  )}
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  This may take a few seconds
-                </p>
-              </div>
+              </Card>
+              <Card>
+                <CardContent className="py-8">
+                  <div className="text-center space-y-4">
+                    <div className="flex items-center justify-center">
+                      <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold">Analyzing Image</h3>
+                      <p className="text-sm text-muted-foreground mt-2">
+                        This may take a few seconds...
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           ) : (
             <>
@@ -275,7 +302,7 @@ export default function Page() {
 
       {/* History Item Dialog */}
       <Dialog open={selectedHistoryItem !== null} onOpenChange={(open) => !open && setSelectedHistoryItem(null)}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           {selectedHistoryItem && (
             <div className="space-y-4">
               <DialogHeader>
