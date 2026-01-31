@@ -6,11 +6,13 @@ Enterprise-grade hot dog detection powered by AI. Built with Next.js, OpenAI GPT
 
 ## Features
 
-- 🎯 **AI-Powered Analysis** - Uses GPT-4o Vision to detect hot dogs with confidence scores
+- 🎯 **AI-Powered Analysis** - Uses GPT-4o Vision to detect hot dogs with confidence scores and detailed reasoning
 - 📸 **Multiple Upload Methods** - Drag & drop, file selection, camera capture, or paste from clipboard
+- 🔗 **Shareable Results** - Generate unique links for any analysis with custom Open Graph images
 - 📊 **Analysis History** - Track all your analyses with session-based storage
 - 📈 **Statistics Dashboard** - View detection breakdown with interactive charts
-- ⌨️ **Keyboard Shortcuts** - Full keyboard navigation support
+- ⌨️ **Keyboard Shortcuts** - Full keyboard navigation support for power users
+- 📱 **Mobile Responsive** - Fully responsive design optimized for all screen sizes
 
 ## Tech Stack
 
@@ -57,7 +59,7 @@ Enterprise-grade hot dog detection powered by AI. Built with Next.js, OpenAI GPT
    # OpenAI
    OPENAI_API_KEY=sk-...
    
-   # Optional
+   # Required for sharing links
    NEXT_PUBLIC_APP_URL=http://localhost:3000
    ```
 
@@ -104,34 +106,53 @@ Enterprise-grade hot dog detection powered by AI. Built with Next.js, OpenAI GPT
 ```
 hot-dog-or-not/
 ├── app/
-│   ├── page.tsx              # Main analysis page
-│   ├── history/              # Analysis history page
-│   ├── api/
-│   │   ├── analyze/          # AI analysis endpoint
-│   │   └── analyses/         # List/fetch analyses
-│   └── globals.css           # Global styles + animations
+│   ├── page.tsx              # Main analysis page with upload & results
+│   ├── layout.tsx            # Root layout with providers
+│   ├── globals.css           # Global styles + animations
+│   ├── history/
+│   │   └── page.tsx          # Analysis history with pagination
+│   ├── share/
+│   │   └── [id]/
+│   │       ├── page.tsx      # Share page with dynamic OG metadata
+│   │       └── not-found.tsx # Custom 404 for missing analyses
+│   └── api/
+│       ├── analyze/
+│       │   └── route.ts      # AI analysis endpoint (GPT-4o Vision)
+│       ├── analyses/
+│       │   ├── route.ts      # List/fetch analyses with pagination
+│       │   └── [id]/
+│       │       └── route.ts  # Get single analysis
+│       └── og/
+│           └── route.tsx     # Open Graph image generator (edge runtime)
 ├── components/
-│   ├── ui/                   # shadcn components
-│   ├── upload-zone.tsx       # Drag & drop upload
-│   ├── analysis-result.tsx   # Result display
-│   ├── analysis-card.tsx     # History card
+│   ├── ui/                   # shadcn/ui components
+│   ├── upload-zone.tsx       # Drag & drop upload with keyboard shortcuts
+│   ├── analysis-result.tsx   # Result display with side-by-side layout
+│   ├── analysis-detail-modal.tsx  # Modal for detailed analysis view
+│   ├── analysis-card.tsx     # History card component
 │   ├── history-strip.tsx     # Recent analyses carousel
-│   ├── sample-images.tsx     # Sample image carousel
-│   └── stats-chart.tsx       # Statistics charts
+│   ├── sample-images.tsx     # Sample image carousel for testing
+│   └── stats-chart.tsx       # Statistics charts (pie + bar)
 ├── lib/
-│   ├── supabase/             # Supabase clients
-│   ├── ai/                   # AI schemas & logic
+│   ├── supabase/
+│   │   ├── client.ts         # Browser Supabase client
+│   │   └── server.ts         # Server Supabase client
+│   ├── ai/
+│   │   └── schema.ts         # AI response validation schemas
 │   └── utils.ts              # Utilities + session management
 └── types/
-    └── index.ts              # TypeScript definitions
+    └── index.ts              # TypeScript type definitions
 ```
 
-## Building for Production
+### Key Architecture Decisions
 
-```bash
-npm run build
-npm start
-```
+- **App Router** - Uses Next.js 16 App Router for optimal performance
+- **Server Components** - Leverages React Server Components where possible
+- **Edge Runtime** - OG image generation runs on edge for fast global responses
+- **Session-based Storage** - Uses browser sessions for privacy-friendly history
+- **Type Safety** - Full TypeScript coverage with Zod validation
+- **Responsive Design** - Mobile-first approach with Tailwind CSS breakpoints
+
 
 ## Deployment
 

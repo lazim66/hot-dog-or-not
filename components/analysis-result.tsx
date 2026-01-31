@@ -1,21 +1,41 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
-import { CheckCircle, XCircle } from '@phosphor-icons/react';
+import { Button } from '@/components/ui/button';
+import { CheckCircle, XCircle, Share, Check } from '@phosphor-icons/react';
 import { AnalyzeResponse } from '@/types';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
 interface AnalysisResultProps {
   result: AnalyzeResponse;
   imageUrl?: string;
+  showShare?: boolean;
 }
 
-export function AnalysisResult({ result, imageUrl }: AnalysisResultProps) {
+export function AnalysisResult({ result, imageUrl, showShare = false }: AnalysisResultProps) {
+  const [copied, setCopied] = useState(false);
+
+  const handleShare = async () => {
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+    const shareUrl = `${appUrl}/share/${result.id}`;
+
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      toast.success('Link copied to clipboard!');
+      
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error('Failed to copy:', error);
+      toast.error('Failed to copy link');
+    }
+  };
   useEffect(() => {
     // Trigger confetti for hot dog detections
     if (result.isHotDog) {
@@ -48,57 +68,81 @@ export function AnalysisResult({ result, imageUrl }: AnalysisResultProps) {
     }
   }, [result.isHotDog]);
 
-  const getCategoryLabel = (category: string) => {
-    return category.replace(/_/g, ' ');
-  };
-
   return (
-    <div className="space-y-6">
-      {/* Image with Verdict Overlay */}
-      {imageUrl && (
-        <Card className="overflow-hidden">
-          <div className="relative w-full max-w-2xl mx-auto">
-            {/* Image with max height constraint */}
-            <div className="relative bg-muted rounded-lg overflow-hidden" style={{ maxHeight: '500px' }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={imageUrl}
-                alt="Analyzed image"
-                className="w-full h-full object-contain"
-                style={{ maxHeight: '500px' }}
-              />
-              
-              {/* Single Clean Verdict Badge */}
-              <div className="absolute top-4 left-4">
-                <Badge 
-                  className={cn(
-                    'flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold shadow-lg',
-                    result.isHotDog 
-                      ? 'bg-green-600 hover:bg-green-600 text-white' 
-                      : 'bg-red-600 hover:bg-red-600 text-white'
-                  )}
-                >
-                  {result.isHotDog ? (
-                    <CheckCircle className="w-4 h-4" weight="bold" />
-                  ) : (
-                    <XCircle className="w-4 h-4" weight="bold" />
-                  )}
-                  {result.isHotDog ? 'Hot Dog' : 'Not Hot Dog'}
-                </Badge>
-              </div>
+    <Card className="overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 p-4 lg:p-6">
+        {/* Left: Image with Verdict Badge */}
+        {imageUrl && (
+          <div className="relative bg-muted rounded-lg overflow-hidden flex items-center justify-center" style={{ minHeight: '250px', maxHeight: '400px' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={imageUrl}
+              alt="Analyzed image"
+              className="w-full h-full object-contain"
+              style={{ maxHeight: '400px' }}
+            />
+            
+            {/* Single Clean Verdict Badge */}
+            <div className="absolute top-4 left-4">
+              <Badge 
+                className={cn(
+                  'flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold shadow-lg',
+                  result.isHotDog 
+                    ? 'bg-green-600 hover:bg-green-600 text-white' 
+                    : 'bg-red-600 hover:bg-red-600 text-white'
+                )}
+              >
+                {result.isHotDog ? (
+                  <CheckCircle className="w-4 h-4" weight="bold" />
+                ) : (
+                  <XCircle className="w-4 h-4" weight="bold" />
+                )}
+                {result.isHotDog ? 'Hot Dog' : 'Not Hot Dog'}
+              </Badge>
             </div>
           </div>
-        </Card>
-      )}
+        )}
 
-      {/* Details Card */}
-      <Card>
-        <CardContent className="pt-6 space-y-4">
+        {/* Right: Details Panel */}
+        <div className="flex flex-col space-y-4 lg:space-y-6">
+          {/* Header with Share Button */}
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+            <div>
+              <h3 className="text-base lg:text-lg font-semibold">Analysis Results</h3>
+              <p className="text-xs lg:text-sm text-muted-foreground mt-1">
+                AI-powered detection complete
+              </p>
+            </div>
+            {showShare && (
+              <Button
+                onClick={handleShare}
+                variant="outline"
+                size="sm"
+                className="gap-2 self-start"
+                disabled={copied}
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-4 h-4" weight="bold" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Share className="w-4 h-4" weight="duotone" />
+                    Share
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
+
+          <Separator />
+
           {/* Confidence */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-semibold">Confidence</h4>
-              <span className="text-xl font-bold">{result.confidence.toFixed(1)}%</span>
+              <span className="text-xl lg:text-2xl font-bold">{result.confidence.toFixed(1)}%</span>
             </div>
             <Progress value={result.confidence} className="h-2" />
           </div>
@@ -140,8 +184,8 @@ export function AnalysisResult({ result, imageUrl }: AnalysisResultProps) {
               </div>
             </>
           )}
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      </div>
+    </Card>
   );
 }

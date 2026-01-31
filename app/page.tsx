@@ -3,10 +3,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { UploadZone } from '@/components/upload-zone';
 import { AnalysisResult } from '@/components/analysis-result';
+import { AnalysisDetailModal } from '@/components/analysis-detail-modal';
 import { SampleImages } from '@/components/sample-images';
 import { HistoryStrip } from '@/components/history-strip';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Kbd } from '@/components/ui/kbd';
 import { getSessionId } from '@/lib/utils';
@@ -163,20 +164,22 @@ export default function Page() {
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
       {/* Floating Header */}
       <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-2xl px-4">
-        <div className="bg-background/80 backdrop-blur-xl border rounded-full shadow-lg px-6 py-3">
+        <div className="bg-background/80 backdrop-blur-xl border rounded-full shadow-lg px-4 py-2 sm:px-6 sm:py-3">
           <div className="flex items-center justify-between">
             <Link href="/" className="hover:opacity-80 transition-opacity">
-              <h1 className="text-xl font-bold tracking-tight">Hot Dog or Not</h1>
+              <h1 className="text-base sm:text-xl font-bold tracking-tight">Hot Dog or Not</h1>
             </Link>
             
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => setShowShortcuts(true)}
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="gap-1.5 h-8 px-2 sm:h-9 sm:px-3"
             >
-              <span className="hidden sm:inline">Press</span>
-              <Kbd>?</Kbd>
-              <span className="hidden sm:inline">for shortcuts</span>
-            </button>
+              <Kbd className="hidden sm:inline">?</Kbd>
+              <span className="hidden sm:inline text-xs">Shortcuts</span>
+              <Kbd className="sm:hidden">?</Kbd>
+            </Button>
           </div>
         </div>
       </header>
@@ -189,17 +192,12 @@ export default function Page() {
             <AnalysisResult 
               result={result} 
               imageUrl={selectedImage || undefined}
+              showShare={true}
             />
           ) : analyzing ? (
-            <div className="space-y-6">
+            <>
               <Card className="overflow-hidden max-w-2xl mx-auto">
                 <div className="relative bg-muted rounded-lg overflow-hidden" style={{ maxHeight: '500px' }}>
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" 
-                       style={{
-                         backgroundSize: '200% 100%',
-                         animation: 'shimmer 2s infinite'
-                       }} 
-                  />
                   {selectedImage && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -209,26 +207,24 @@ export default function Page() {
                       style={{ maxHeight: '500px' }}
                     />
                   )}
-                </div>
-              </Card>
-              <Card>
-                <CardContent className="py-8">
-                  <div className="text-center space-y-4">
-                    <div className="flex items-center justify-center">
-                      <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold">Analyzing Image</h3>
-                      <p className="text-sm text-muted-foreground mt-2">
-                        This may take a few seconds...
-                      </p>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-full bg-background/90 backdrop-blur-sm shadow-lg flex items-center justify-center">
+                      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
                     </div>
                   </div>
-                </CardContent>
+                </div>
               </Card>
-            </div>
+
+              {/* Floating Analysis Progress */}
+              <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
+                <div className="bg-background/90 backdrop-blur-xl border rounded-full px-6 py-3 shadow-lg">
+                  <div className="flex items-center gap-3">
+                    <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                    <p className="text-sm font-medium">Analyzing Image...</p>
+                  </div>
+                </div>
+              </div>
+            </>
           ) : (
             <>
               <UploadZone
@@ -258,7 +254,7 @@ export default function Page() {
 
       {/* Fixed Bottom Action Button - Show only when result is displayed */}
       {result && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 px-4">
           <Button
             onClick={reset}
             size="lg"
@@ -267,39 +263,41 @@ export default function Page() {
           >
             <ArrowCounterClockwise className="w-4 h-4" weight="duotone" />
             Analyze Another
-            <Kbd>Esc</Kbd>
+            <Kbd className="hidden sm:inline">Esc</Kbd>
           </Button>
         </div>
       )}
 
       {/* Shortcuts Dialog */}
       <Dialog open={showShortcuts} onOpenChange={setShowShortcuts}>
-        <DialogContent>
+        <DialogContent className="w-[calc(100%-2rem)] max-w-md">
           <DialogHeader>
             <DialogTitle>Keyboard Shortcuts</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-4">
               <span className="text-sm">Open file picker</span>
-              <div className="flex gap-1">
+              <div className="flex items-center gap-1 shrink-0">
                 <Kbd>{typeof navigator !== 'undefined' && navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}</Kbd>
+                <span className="text-xs text-muted-foreground">+</span>
                 <Kbd>O</Kbd>
               </div>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-4">
               <span className="text-sm">Paste from clipboard</span>
-              <div className="flex gap-1">
+              <div className="flex items-center gap-1 shrink-0">
                 <Kbd>{typeof navigator !== 'undefined' && navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}</Kbd>
+                <span className="text-xs text-muted-foreground">+</span>
                 <Kbd>V</Kbd>
               </div>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-4">
               <span className="text-sm">Reset/Clear</span>
-              <Kbd>Esc</Kbd>
+              <Kbd className="shrink-0">Esc</Kbd>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-4">
               <span className="text-sm">Show shortcuts</span>
-              <Kbd>?</Kbd>
+              <Kbd className="shrink-0">?</Kbd>
             </div>
           </div>
         </DialogContent>
@@ -307,16 +305,9 @@ export default function Page() {
 
       {/* History Item Dialog */}
       <Dialog open={selectedHistoryItem !== null} onOpenChange={(open) => !open && setSelectedHistoryItem(null)}>
-        <DialogContent className="max-w-3xl max-h-[85vh] overflow-hidden flex flex-col p-0">
+        <DialogContent className="w-[95vw] max-w-none max-h-[90vh] overflow-hidden flex flex-col p-4 sm:p-6 lg:p-8">
           {selectedHistoryItem && (
-            <>
-              <DialogHeader className="px-6 pt-6 pb-2 flex-shrink-0">
-                <DialogTitle>Analysis Details</DialogTitle>
-              </DialogHeader>
-              <div className="overflow-y-auto px-6 pb-6">
-                <AnalysisResult result={selectedHistoryItem} imageUrl={selectedHistoryItem.imageUrl} />
-              </div>
-            </>
+            <AnalysisDetailModal analysis={selectedHistoryItem} />
           )}
         </DialogContent>
       </Dialog>

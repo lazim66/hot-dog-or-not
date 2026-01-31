@@ -14,10 +14,10 @@ interface AnalysisCardProps {
 export function AnalysisCard({ analysis, onClick }: AnalysisCardProps) {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return new Intl.RelativeTimeFormat('en', { numeric: 'auto' }).format(
-      Math.ceil((date.getTime() - Date.now()) / (1000 * 60 * 60 * 24)),
-      'day'
-    );
+    const now = new Date();
+    const diffTime = date.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return new Intl.RelativeTimeFormat('en', { numeric: 'auto' }).format(diffDays, 'day');
   };
 
   return (

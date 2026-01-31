@@ -64,7 +64,7 @@ export function UploadZone({ onImageSelect, disabled = false }: UploadZoneProps)
         !disabled && 'hover:border-primary/50'
       )}
     >
-      <div className="p-12 flex flex-col items-center justify-center gap-6 text-center">
+      <div className="p-6 sm:p-12 flex flex-col items-center justify-center gap-4 sm:gap-6 text-center">
         <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10">
           <UploadSimple className="w-8 h-8 text-primary" weight="duotone" />
         </div>
@@ -88,10 +88,11 @@ export function UploadZone({ onImageSelect, disabled = false }: UploadZoneProps)
           >
             {/* eslint-disable-next-line jsx-a11y/alt-text */}
             <Image className="w-4 h-4" weight="duotone" />
-            Choose File
-            <div className="flex items-center gap-0.5 ml-1">
-              <Kbd className="text-[10px]">{typeof navigator !== 'undefined' && navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}</Kbd>
-              <Kbd className="text-[10px]">O</Kbd>
+            <span>Choose File</span>
+            <div className="hidden sm:flex items-center gap-1">
+              <Kbd>{typeof navigator !== 'undefined' && navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}</Kbd>
+              <span className="text-xs text-muted-foreground">+</span>
+              <Kbd>O</Kbd>
             </div>
           </Button>
 
@@ -106,13 +107,14 @@ export function UploadZone({ onImageSelect, disabled = false }: UploadZoneProps)
           </Button>
         </div>
 
-        <div className="flex items-center gap-4 text-xs text-muted-foreground">
+        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-xs text-muted-foreground">
           <span>Supports: PNG, JPG, WEBP, GIF</span>
-          <span className="text-muted-foreground/50">|</span>
-          <div className="flex items-center gap-1.5">
+          <span className="text-muted-foreground/50 hidden sm:inline">|</span>
+          <div className="flex items-center gap-1.5 hidden sm:flex">
             <span>Paste:</span>
-            <Kbd className="text-[10px]">{typeof navigator !== 'undefined' && navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}</Kbd>
-            <Kbd className="text-[10px]">V</Kbd>
+            <Kbd>{typeof navigator !== 'undefined' && navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}</Kbd>
+            <span className="text-xs text-muted-foreground">+</span>
+            <Kbd>V</Kbd>
           </div>
         </div>
 

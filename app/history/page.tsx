@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { AnalysisCard } from '@/components/analysis-card';
+import { AnalysisDetailModal } from '@/components/analysis-detail-modal';
 import { StatsChart } from '@/components/stats-chart';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import {
   Pagination,
   PaginationContent,
@@ -28,6 +30,7 @@ export default function HistoryPage() {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState(0);
+  const [selectedAnalysis, setSelectedAnalysis] = useState<AnalyzeResponse | null>(null);
 
   // Fetch all analyses for stats (once)
   useEffect(() => {
@@ -151,10 +154,7 @@ export default function HistoryPage() {
                   <AnalysisCard
                     key={analysis.id}
                     analysis={analysis}
-                    onClick={() => {
-                      // Could open a dialog or navigate to detail page
-                      window.location.href = `/share/${analysis.id}`;
-                    }}
+                    onClick={() => setSelectedAnalysis(analysis)}
                   />
                 ))}
               </div>
@@ -231,6 +231,15 @@ export default function HistoryPage() {
           </Tabs>
         </div>
       </main>
+
+      {/* Analysis Details Dialog */}
+      <Dialog open={selectedAnalysis !== null} onOpenChange={(open) => !open && setSelectedAnalysis(null)}>
+        <DialogContent className="w-[95vw] max-w-none max-h-[90vh] overflow-hidden flex flex-col p-4 sm:p-6 lg:p-8">
+          {selectedAnalysis && (
+            <AnalysisDetailModal analysis={selectedAnalysis} />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

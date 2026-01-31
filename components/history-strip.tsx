@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AnalyzeResponse } from '@/types';
 import { getSessionId } from '@/lib/utils';
-import { ClockCounterClockwise, ArrowRight } from '@phosphor-icons/react';
+import { ArrowRight } from '@phosphor-icons/react';
 import Link from 'next/link';
 
 interface HistoryStripProps {
@@ -58,7 +58,6 @@ export function HistoryStrip({ onAnalysisClick, limit = 10 }: HistoryStripProps)
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold flex items-center gap-2">
-            <ClockCounterClockwise className="w-5 h-5" weight="duotone" />
             Recent Scans
           </h3>
         </div>
@@ -86,7 +85,6 @@ export function HistoryStrip({ onAnalysisClick, limit = 10 }: HistoryStripProps)
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold flex items-center gap-2">
-          <ClockCounterClockwise className="w-5 h-5" weight="duotone" />
           Recent Scans
         </h3>
         <Button variant="ghost" size="sm" asChild>
@@ -114,8 +112,8 @@ export function HistoryStrip({ onAnalysisClick, limit = 10 }: HistoryStripProps)
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="-left-12" />
-        <CarouselNext className="-right-12" />
+        <CarouselPrevious className="hidden sm:flex -left-12" />
+        <CarouselNext className="hidden sm:flex -right-12" />
       </Carousel>
     </div>
   );
