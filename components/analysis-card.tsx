@@ -23,8 +23,8 @@ export function AnalysisCard({ analysis, onClick }: AnalysisCardProps) {
   return (
     <Card
       className={cn(
-        'overflow-hidden transition-all hover:shadow-md',
-        onClick && 'cursor-pointer'
+        'overflow-hidden transition-all hover:shadow-lg border-2',
+        onClick && 'cursor-pointer hover:border-primary'
       )}
       onClick={onClick}
     >
@@ -40,16 +40,17 @@ export function AnalysisCard({ analysis, onClick }: AnalysisCardProps) {
         {/* Result Badge Overlay */}
         <div className="absolute top-2 right-2">
           <Badge
-            variant={analysis.isHotDog ? 'default' : 'secondary'}
             className={cn(
-              'font-semibold shadow-lg',
-              analysis.isHotDog ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'
+              'flex items-center gap-1 text-xs font-semibold shadow-lg',
+              analysis.isHotDog 
+                ? 'bg-green-600 hover:bg-green-600 text-white' 
+                : 'bg-red-600 hover:bg-red-600 text-white'
             )}
           >
             {analysis.isHotDog ? (
-              <CheckCircle className="w-3 h-3 mr-1" weight="bold" />
+              <CheckCircle className="w-3 h-3" weight="bold" />
             ) : (
-              <XCircle className="w-3 h-3 mr-1" weight="bold" />
+              <XCircle className="w-3 h-3" weight="bold" />
             )}
             {analysis.isHotDog ? 'Hot Dog' : 'Not Hot Dog'}
           </Badge>
@@ -57,7 +58,7 @@ export function AnalysisCard({ analysis, onClick }: AnalysisCardProps) {
       </div>
 
       {/* Card Content */}
-      <div className="p-3 space-y-2">
+      <div className="p-3">
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-muted-foreground">
             {analysis.confidence.toFixed(0)}% confident
@@ -66,12 +67,6 @@ export function AnalysisCard({ analysis, onClick }: AnalysisCardProps) {
             {formatDate(analysis.createdAt)}
           </span>
         </div>
-
-        {analysis.style && (
-          <Badge variant="outline" className="text-xs">
-            {analysis.style}
-          </Badge>
-        )}
       </div>
     </Card>
   );

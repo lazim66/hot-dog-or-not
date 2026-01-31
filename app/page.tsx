@@ -186,26 +186,16 @@ export default function Page() {
         <div className="max-w-4xl mx-auto space-y-8">
           {/* Result or Upload Zone */}
           {result ? (
-            <div className="space-y-4">
-              <AnalysisResult result={result} imageUrl={selectedImage || undefined} />
-              
-              <div className="flex justify-center">
-                <Button
-                  onClick={reset}
-                  variant="outline"
-                  size="lg"
-                  className="gap-2"
-                >
-                  <ArrowCounterClockwise className="w-4 h-4" weight="duotone" />
-                  Analyze Another
-                  <Kbd>Esc</Kbd>
-                </Button>
-              </div>
-            </div>
+            <AnalysisResult 
+              result={result} 
+              imageUrl={selectedImage || undefined} 
+              onAnalyzeAnother={reset}
+              showAnalyzeAnother={true}
+            />
           ) : analyzing ? (
             <div className="space-y-6">
-              <Card className="overflow-hidden">
-                <div className="relative aspect-video bg-muted">
+              <Card className="overflow-hidden max-w-2xl mx-auto">
+                <div className="relative bg-muted rounded-lg overflow-hidden" style={{ maxHeight: '500px' }}>
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" 
                        style={{
                          backgroundSize: '200% 100%',
@@ -218,6 +208,7 @@ export default function Page() {
                       src={selectedImage}
                       alt="Analyzing"
                       className="w-full h-full object-contain opacity-50"
+                      style={{ maxHeight: '500px' }}
                     />
                   )}
                 </div>
@@ -302,14 +293,16 @@ export default function Page() {
 
       {/* History Item Dialog */}
       <Dialog open={selectedHistoryItem !== null} onOpenChange={(open) => !open && setSelectedHistoryItem(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[85vh] overflow-hidden flex flex-col p-0">
           {selectedHistoryItem && (
-            <div className="space-y-4">
-              <DialogHeader>
+            <>
+              <DialogHeader className="px-6 pt-6 pb-2 flex-shrink-0">
                 <DialogTitle>Analysis Details</DialogTitle>
               </DialogHeader>
-              <AnalysisResult result={selectedHistoryItem} imageUrl={selectedHistoryItem.imageUrl} />
-            </div>
+              <div className="overflow-y-auto px-6 pb-6">
+                <AnalysisResult result={selectedHistoryItem} imageUrl={selectedHistoryItem.imageUrl} />
+              </div>
+            </>
           )}
         </DialogContent>
       </Dialog>

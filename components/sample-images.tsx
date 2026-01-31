@@ -47,7 +47,7 @@ export function SampleImages({ onSampleSelect, disabled = false }: SampleImagesP
   return (
     <div className="space-y-4">
       <div className="text-center">
-        <h3 className="text-sm font-medium text-muted-foreground">
+        <h3 className="text-base font-semibold text-muted-foreground">
           Try these samples
         </h3>
       </div>
